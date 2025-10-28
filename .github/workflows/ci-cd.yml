@@ -1,4 +1,4 @@
-name: CI/CD Pipeline (Docker Hub)
+name: CI/CD Pipeline [GitOps]
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Step 3: Set up QEMU for cross-platform builds
+      # Step 3: Set up QEMU (for multi-arch builds)
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -40,3 +40,27 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:v1.0.${{ github.run_number }}
+
+      # Step 6: Update image tag in GitOps repository
+      - name: Update ArgoCD Deployment Repo
+        env:
+          GITOPS_PAT: ${{ secrets.GITOPS_PAT }}
+          DOCKER_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}
+          NEW_TAG: v1.0.${{ github.run_number }}
+        run: |
+          
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+          
+          rm -rf argocd-deployments
+          git clone https://github.com/Raihan-009/argocd-deployments.git
+          cd argocd-deployments/minikube-deployment/boilerplate
+
+          
+          sed -i "s|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${NEW_TAG}|g" deployment.yaml
+
+          
+          git add deployment.yaml
+          git commit -m "Update boilerplate image tag to ${NEW_TAG}"
+          git push https://${GITOPS_PAT}@github.com/Raihan-009/argocd-deployments.git main
