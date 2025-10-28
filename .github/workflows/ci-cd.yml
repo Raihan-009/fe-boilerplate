@@ -61,6 +61,6 @@ jobs:
           sed -i "s|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${NEW_TAG}|g" deployment.yml
 
           
-          git add deployment.yaml
+          git add deployment.yml
           git commit -m "Update boilerplate image tag to ${NEW_TAG}"
           git push https://${GITOPS_PAT}@github.com/Raihan-009/argocd-deployments.git main
