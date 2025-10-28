@@ -58,7 +58,7 @@ jobs:
           cd argocd-deployments/minikube-deployment/boilerplate
 
           
-          sed -i "s|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${NEW_TAG}|g" deployment.yaml
+          sed -i "s|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${NEW_TAG}|g" deployment.yml
 
           
           git add deployment.yaml
