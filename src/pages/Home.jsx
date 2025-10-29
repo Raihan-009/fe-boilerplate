@@ -5,7 +5,7 @@ const Home = () => {
     <div className="min-h-screen flex flex-col items-center justify-center p-8">
       <div className="max-w-4xl w-full">
         <h1 className="text-4xl md:text-5xl font-bold text-center mb-4">
-          React - Vite Boilerplate
+          React - Vite X Boilerplate
         </h1>
         <p className="text-center text-gray-600 mb-12 text-lg">
           A modern starter kit for your next web application
